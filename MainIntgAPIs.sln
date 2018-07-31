@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAPIs", "TestAPIs\TestAP
 		{90772BA2-EA27-4A1A-9EC0-E3032E32DD87} = {90772BA2-EA27-4A1A-9EC0-E3032E32DD87}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OraDB", "OraDB\OraDB.csproj", "{9580E2FA-2A88-4325-9E60-30B702C96A9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,12 +30,17 @@ Global
 		{600FBB1D-662A-42C4-9DF4-DDA846BDA7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{600FBB1D-662A-42C4-9DF4-DDA846BDA7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{600FBB1D-662A-42C4-9DF4-DDA846BDA7BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9580E2FA-2A88-4325-9E60-30B702C96A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9580E2FA-2A88-4325-9E60-30B702C96A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9580E2FA-2A88-4325-9E60-30B702C96A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9580E2FA-2A88-4325-9E60-30B702C96A9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{600FBB1D-662A-42C4-9DF4-DDA846BDA7BD} = {D5410161-A19F-4652-9A9A-E002B8F9E253}
+		{9580E2FA-2A88-4325-9E60-30B702C96A9D} = {AB81523E-202B-44E8-990E-B2BEF0F25372}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {935B1E8E-C853-4F4E-AD9E-FA5BF80C57F7}
