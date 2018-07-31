@@ -12,6 +12,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestLayer", "TestLayer", "{D5410161-A19F-4652-9A9A-E002B8F9E253}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAPIs", "TestAPIs\TestAPIs.csproj", "{600FBB1D-662A-42C4-9DF4-DDA846BDA7BD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{90772BA2-EA27-4A1A-9EC0-E3032E32DD87} = {90772BA2-EA27-4A1A-9EC0-E3032E32DD87}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,7 +7,7 @@ using System.ServiceModel.Web;
 using System.Text;
 
 using System.Data;
-
+using System.Collections;
 
 namespace MainIntgAPIs
 {
@@ -20,23 +20,28 @@ namespace MainIntgAPIs
             return string.Format("You entered: {0}", value);
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public IEnumerable<CompositeType> GetDataUsingDataContract(CompositeType composite)
         {
+            List<CompositeType> lsi = new List<CompositeType>();
+
             if (composite == null)
             {
                 throw new ArgumentNullException("composite");
             }
             if (composite.BoolValue)
             {
-                composite.StringValue += "Suffix";
+                lsi.Add(new CompositeType() { BoolValue = true, StringValue = "ss1s" });
+                lsi.Add(new CompositeType() { BoolValue = false, StringValue = "sswss" });
+                lsi.Add(new CompositeType() { BoolValue = true, StringValue = "sssws" });
             }
-            return composite;
+
+            return lsi;
         }
 
 
         public DataTable getmydata(string composite)
         {
-            DataTable dt = new DataTable();
+            DataTable dt = new DataTable("myDT");
 
             dt.Columns.Add(new DataColumn("myC1", typeof(int)));
             dt.Columns.Add(new DataColumn("myC2", typeof(string)));
