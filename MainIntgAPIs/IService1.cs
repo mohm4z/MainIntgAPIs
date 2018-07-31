@@ -5,6 +5,8 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Data;
+
 
 namespace MainIntgAPIs
 {
@@ -15,6 +17,9 @@ namespace MainIntgAPIs
 
         [OperationContract]
         string GetData(int value);
+
+        [OperationContract]
+        DataTable getmydata(string value);
 
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
