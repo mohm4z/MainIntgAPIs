@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BLL.TestHelper
 {
-    class Test
+    class TestBLL
     {
     }
 }
