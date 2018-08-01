@@ -8,6 +8,9 @@ using System.Text;
 
 using System.Data;
 using System.Collections;
+using OraDB.Models;
+using System.Data.OracleClient;
+
 
 namespace MainIntgAPIs
 {
@@ -15,6 +18,9 @@ namespace MainIntgAPIs
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
     public class Service1 : IService1
     {
+        
+
+
         public string GetData(int value)
         {
             return string.Format("You entered: {0}", value);
@@ -41,17 +47,19 @@ namespace MainIntgAPIs
 
         public DataTable getmydata(string composite)
         {
-            DataTable dt = new DataTable("myDT");
+            DataSet ds = new DataSet("Myds");
 
-            dt.Columns.Add(new DataColumn("myC1", typeof(int)));
-            dt.Columns.Add(new DataColumn("myC2", typeof(string)));
+            DataTable dt = new DataTable("MyTaple");
 
-            dt.Rows.Add(1, "myr1");
-            dt.Rows.Add(2, "myr2");
-            dt.Rows.Add(3, "myr3");
-            dt.Rows.Add(4, "myr4");
+            dt = new Departmints().GetDepts();
+
+            ds.Tables.Add(dt);
+
+            ds.Tables[0].TableName = "Mhytt";
 
             return dt;
         }
     }
+
+   
 }

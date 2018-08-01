@@ -40,4 +40,5 @@ namespace MainIntgAPIs
         [DataMember]
         public string StringValue { get; set; } = "Hello ";
     }
+
 }
