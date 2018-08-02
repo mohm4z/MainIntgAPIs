@@ -7,16 +7,18 @@ using System.Linq;
 using System.Data;
 //using System.Data.SqlClient;
 
-using System.Data.OracleClient;
+//using System.Data.OracleClient;
+using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 
-namespace OraDB
+namespace OraDB.DbManager
 {
-    public class ADO : IDisposable
+    public class ADO : IADO, IDisposable
     {
-        OracleTransaction SqlTrans;
+        private OracleTransaction SqlTrans;
 
         // Development Database
-        OracleConnection conn = new OracleConnection("SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));uid=ulp;pwd=ulp;unicode=true;");
+        private OracleConnection conn;
 
         // old Test
         //OracleConnection conn = new OracleConnection("SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.77)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=BLGDB)));uid=web;pwd=web;unicode=true;");
@@ -33,12 +35,18 @@ namespace OraDB
         // TVIS Database
         //OracleConnection conn = new OracleConnection("SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.100.13)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=IUDB)));uid=ulp;pwd=ulp;unicode=true;");
 
-        public OracleCommand cmd = new OracleCommand();
+        private OracleCommand cmd;
 
-        //public OracleParameter parm = new OracleParameter();
+        //public List<OracleParameter> parms = new List<OracleParameter>();
 
         public ADO()
         {
+            conn = new OracleConnection(
+            //"SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));uid=ulp;pwd=ulp;unicode=true;"
+            "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));User Id=main;Password=main;"
+                );
+
+            cmd = new OracleCommand();
             cmd.Connection = conn;
 
             if (conn.State != ConnectionState.Open)
@@ -47,6 +55,8 @@ namespace OraDB
 
         public ADO(bool Trans)
         {
+            conn = new OracleConnection("SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));uid=ulp;pwd=ulp;unicode=true;");
+            cmd = new OracleCommand();
             cmd.Connection = conn;
             //cmd.BindByName = true;
 
@@ -56,7 +66,6 @@ namespace OraDB
             SqlTrans = conn.BeginTransaction();
             cmd.Transaction = SqlTrans;
         }
-
 
         //public OracleCommand cmd = new OracleCommand();
 
@@ -77,27 +86,9 @@ namespace OraDB
         //    }
         //}
 
-        public bool SqlCommand(OracleCommand cmd)
-        {
-            //PopulateNullParameters();
-
-            int Result = cmd.ExecuteNonQuery();
-
-            if (Result > -1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-
-        //public bool SqlCommand()
+        //public bool SqlCommand(OracleCommand cmd)
         //{
         //    //PopulateNullParameters();
-        //    //OracleCommand cmd
 
         //    int Result = cmd.ExecuteNonQuery();
 
@@ -111,6 +102,75 @@ namespace OraDB
         //    }
         //}
 
+        public bool SqlCommand(string Statment)
+        {
+            cmd.CommandText = Statment;
+
+            int Result = cmd.ExecuteNonQuery();
+
+            if (Result > -1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public OracleParameterCollection ExecuteStoredProcedure(string SP_NAME, List<OracleParameter> parms, out DataTable dbRefCursor)
+        {
+            cmd.CommandText = SP_NAME;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddRange(parms.ToArray());
+
+            DataTable dt = new DataTable("Tabl");
+
+            cmd.ExecuteNonQuery();
+            //OracleDataAdapter da = new OracleDataAdapter(cmd);
+
+            for (int i = 0; i < parms.Count(); i++)
+            {
+                if (parms[i].OracleDbType == OracleDbType.RefCursor)
+                {
+                    OracleDataReader dr1 = ((OracleRefCursor)parms[i].Value).GetDataReader();
+                    //OracleRefCursor oraCursor = (OracleRefCursor)parms[i].Value;
+
+                    //da.Fill(dt, oraCursor);
+
+                    dt.Load(dr1);
+
+                    break;
+                }
+            }
+
+            //foreach (OracleParameter oraPar in parms)
+            //{
+            //    if (oraPar.OracleDbType == OracleDbType.RefCursor)
+            //    {
+            //        OracleRefCursor oraCursor = (OracleRefCursor)cmd.Parameters[3].Value;
+            //        da.Fill(dt, oraCursor);
+
+            //        break;
+            //    }
+            //}
+
+            dbRefCursor = dt;
+
+            return cmd.Parameters;
+        }
+
+        public OracleParameterCollection ExecuteStoredProcedure(string SP_NAME, List<OracleParameter> parms)
+        {
+            cmd.CommandText = SP_NAME;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddRange(parms.ToArray());
+
+            //OracleDataAdapter da = new OracleDataAdapter(cmd);
+            cmd.ExecuteNonQuery();
+
+            return cmd.Parameters;
+        }
 
         //public bool SqlCommandT(OracleCommand cmd)
         //{
@@ -147,8 +207,6 @@ namespace OraDB
                 return false;
             }
         }
-
-
 
         //public long SqlCommandGetID(OracleCommand cmd, string cmdGetID)
         //{
@@ -194,8 +252,19 @@ namespace OraDB
         //    }
         //}
 
-        public DataTable SqlSelect(OracleCommand cmd)
+        //public DataTable SqlSelect(OracleCommand cmd)
+        //{
+        //    DataTable dt = new DataTable();
+
+        //    dt.Load(cmd.ExecuteReader());
+
+        //    return dt;
+        //}
+
+        public DataTable SqlSelect(string Statment)
         {
+            cmd.CommandText = Statment;
+
             DataTable dt = new DataTable();
 
             dt.Load(cmd.ExecuteReader());
@@ -203,9 +272,27 @@ namespace OraDB
             return dt;
         }
 
-        public DataRow SqlSelectOneRow(OracleCommand cmd)
+        //public DataRow SqlSelectOneRow(OracleCommand cmd)
+        //{
+        //    DataTable dt = new DataTable();
+        //    dt.Load(cmd.ExecuteReader());
+
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        return dt.Rows[0];
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+
+        public DataRow SqlSelectOneRow(string Statment)
         {
+            cmd.CommandText = Statment;
+
             DataTable dt = new DataTable();
+
             dt.Load(cmd.ExecuteReader());
 
             if (dt.Rows.Count > 0)
@@ -218,9 +305,21 @@ namespace OraDB
             }
         }
 
-        public object SqlSelectOneValue(OracleCommand cmd)
+        //public object SqlSelectOneValue(OracleCommand cmd)
+        //{
+        //    return cmd.ExecuteScalar();
+        //}
+
+        public object SqlSelectOneValue(string Statment)
         {
+            cmd.CommandText = Statment;
+
             return cmd.ExecuteScalar();
+        }
+
+        public object Nullable(object value)
+        {
+            return value ?? DBNull.Value;
         }
 
         private void PopulateNullParameters()
@@ -233,12 +332,6 @@ namespace OraDB
                 }
             }
         }
-
-        public object Nullable(object value)
-        {
-            return value ?? DBNull.Value;
-        }
-
 
         //SqlTransaction SqlTrans;
         //SqlConnection conn = new SqlConnection("Data Source=SQL5016.Smarterasp.net;Initial Catalog=DB_9BC4B1_BaljDataBase;Persist Security Info=True;User ID=DB_9BC4B1_BaljDataBase_admin;Password=mohm05428");

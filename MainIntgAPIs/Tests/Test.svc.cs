@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Text;
 
 using System.Data;
+using BLL.TestHelper;
 
 namespace MainIntgAPIs.Tests
 {
@@ -13,12 +14,37 @@ namespace MainIntgAPIs.Tests
     // NOTE: In order to launch WCF Test Client for testing this service, please select Test.svc or Test.svc.cs at the Solution Explorer and start debugging.
     public class Test : ITest
     {
-        public DataTable GetData(string SP_NAME)
+        public IEnumerable<dept> GetData(string T_NAME)
         {
-            DataTable dt = new DataTable();
+            try
+            {
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.GetDeptHelper(T_NAME);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errorn Ma : " + ex.Message);
+            }
+        }
 
-            return dt;
-
+        public R_View GetSP(int dept_no, string dept_sec_name)
+        {
+            try
+            {
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.GetSP(dept_no,  dept_sec_name);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errorn Ma : " + ex.Message);
+            }
         }
     }
+
+
+
 }

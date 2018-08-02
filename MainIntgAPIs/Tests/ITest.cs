@@ -6,7 +6,7 @@ using System.ServiceModel;
 using System.Text;
 
 using System.Data;
-
+using BLL.TestHelper;
 
 namespace MainIntgAPIs.Tests
 {
@@ -15,7 +15,9 @@ namespace MainIntgAPIs.Tests
     public interface ITest
     {
         [OperationContract]
-        DataTable GetData(string SP_NAME);
+        IEnumerable<dept> GetData(string T_NAME);
 
+        [OperationContract]
+        R_View GetSP(int dept_no, string dept_sec_name);
     }
 }

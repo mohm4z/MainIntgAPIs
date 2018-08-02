@@ -55,7 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ADO.cs" />
+    <Compile Include="DbManager\ADO.cs" />
+    <Compile Include="DbManager\IADO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestModels\TestDAL.cs" />
   </ItemGroup>
