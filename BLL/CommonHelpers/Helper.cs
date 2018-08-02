@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Helpers
+namespace BLL.CommonHelpers
 {
     public static class Helper
     {

@@ -15,9 +15,14 @@ namespace MainIntgAPIs.Tests
     public interface ITest
     {
         [OperationContract]
-        IEnumerable<dept> GetData(string T_NAME);
+        IEnumerable<dept> GetData(
+            string T_NAME
+            );
 
         [OperationContract]
-        R_View GetSP(int dept_no, string dept_sec_name);
+        R_View GetSP(
+             int dept_no,
+             string dept_sec_name
+            );
     }
 }

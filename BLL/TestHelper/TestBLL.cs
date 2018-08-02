@@ -8,7 +8,7 @@ using System.Data;
 using OraDB.DbManager;
 using OraDB.TestModels;
 using System.Collections;
-using BLL.Helpers;
+using BLL.CommonHelpers;
 
 namespace BLL.TestHelper
 {
@@ -29,14 +29,24 @@ namespace BLL.TestHelper
         }
 
 
-        public R_View GetSP(int dept_no, string dept_sec_name)
+        public R_View GetSP(
+            in int dept_no, 
+            in string dept_sec_name
+            )
         {
             using (TestDAL test = new TestDAL(new ADO()))
             {
+                test.GetSP_DAL(
+                    dept_no, 
+                    dept_sec_name, 
+                    out DataSet DS,
+                    out string p_dept_name
+                    );
+
                 R_View ev = new R_View
                 {
-                    P_DEPT_DATA = test.GetSP_DAL(dept_no, dept_sec_name, out string ss).DataTableToList<dept>(),
-                    P_DEPT_NAME = ss
+                    P_DEPT_DATA = DS.Tables[0].DataTableToList<dept>(),
+                    P_DEPT_NAME = p_dept_name
                 };
 
                 return ev;

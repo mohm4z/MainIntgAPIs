@@ -49,8 +49,7 @@ namespace OraDB.DbManager
             cmd = new OracleCommand();
             cmd.Connection = conn;
 
-            if (conn.State != ConnectionState.Open)
-            { conn.Open(); }
+            if (conn.State != ConnectionState.Open) conn.Open();
         }
 
         public ADO(bool Trans)
@@ -60,8 +59,7 @@ namespace OraDB.DbManager
             cmd.Connection = conn;
             //cmd.BindByName = true;
 
-            if (conn.State != ConnectionState.Open)
-            { conn.Open(); }
+            if (conn.State != ConnectionState.Open) conn.Open();
 
             SqlTrans = conn.BeginTransaction();
             cmd.Transaction = SqlTrans;
@@ -118,58 +116,51 @@ namespace OraDB.DbManager
             }
         }
 
-        public OracleParameterCollection ExecuteStoredProcedure(string SP_NAME, List<OracleParameter> parms, out DataTable dbRefCursor)
+        public void ExecuteStoredProcedure(
+            in string SP_NAME,
+            in List<OracleParameter> parms,
+            out OracleParameterCollection OPC,
+            out DataSet DS
+            )
         {
             cmd.CommandText = SP_NAME;
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddRange(parms.ToArray());
 
-            DataTable dt = new DataTable("Tabl");
-
             cmd.ExecuteNonQuery();
-            //OracleDataAdapter da = new OracleDataAdapter(cmd);
+
+            OPC = cmd.Parameters;
+
+            DS = new DataSet("DsTables");
 
             for (int i = 0; i < parms.Count(); i++)
             {
                 if (parms[i].OracleDbType == OracleDbType.RefCursor)
                 {
+                    DS.Tables.Add(new DataTable(parms[i].ParameterName));
+
                     OracleDataReader dr1 = ((OracleRefCursor)parms[i].Value).GetDataReader();
-                    //OracleRefCursor oraCursor = (OracleRefCursor)parms[i].Value;
 
-                    //da.Fill(dt, oraCursor);
-
-                    dt.Load(dr1);
+                    DS.Tables[parms[i].ParameterName].Load(dr1);
 
                     break;
                 }
             }
-
-            //foreach (OracleParameter oraPar in parms)
-            //{
-            //    if (oraPar.OracleDbType == OracleDbType.RefCursor)
-            //    {
-            //        OracleRefCursor oraCursor = (OracleRefCursor)cmd.Parameters[3].Value;
-            //        da.Fill(dt, oraCursor);
-
-            //        break;
-            //    }
-            //}
-
-            dbRefCursor = dt;
-
-            return cmd.Parameters;
         }
 
-        public OracleParameterCollection ExecuteStoredProcedure(string SP_NAME, List<OracleParameter> parms)
+        public void ExecuteStoredProcedure(
+            in string SP_NAME,
+            in List<OracleParameter> parms,
+            out OracleParameterCollection OPC
+            )
         {
             cmd.CommandText = SP_NAME;
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddRange(parms.ToArray());
 
-            //OracleDataAdapter da = new OracleDataAdapter(cmd);
             cmd.ExecuteNonQuery();
 
-            return cmd.Parameters;
+            OPC = cmd.Parameters;
         }
 
         //public bool SqlCommandT(OracleCommand cmd)

@@ -23,17 +23,26 @@ namespace OraDB.DbManager
         /// </summary>
         /// <param name="SP_NAME"></param>
         /// <param name="parms"></param>
-        /// <returns></returns>
-        OracleParameterCollection ExecuteStoredProcedure(string SP_NAME, List<OracleParameter> parms);
+        /// <param name="OPC"></param>
+        void ExecuteStoredProcedure(
+            in string SP_NAME,
+            in List<OracleParameter> parms,
+            out OracleParameterCollection OPC
+            );
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="SP_NAME"></param>
         /// <param name="parms"></param>
-        /// <param name="RefCursor"></param>
-        /// <returns></returns>
-        OracleParameterCollection ExecuteStoredProcedure(string SP_NAME, List<OracleParameter> parms, out DataTable RefCursor);
+        /// <param name="OPC"></param>
+        /// <param name="DS"></param>
+        void ExecuteStoredProcedure(
+            in string SP_NAME,
+            in List<OracleParameter> parms,
+            out OracleParameterCollection OPC,
+            out DataSet DS
+            );
 
         /// <summary>
         /// 

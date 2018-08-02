@@ -19,30 +19,36 @@ namespace OraDB.TestModels
             this.ado = Ado;
         }
 
-        public DataTable GetDeptDAL(string T_NAME)
+        public DataTable GetDeptDAL(
+            string T_NAME
+            )
         {
             return ado.SqlSelect("SELECT * FROM " + T_NAME);
         }
 
-
-        public DataTable GetSP_DAL(int p_dept_no, string p_dept_sec_name, out string p_dept_name)
+        public void GetSP_DAL(
+            in int p_dept_no, 
+            in string p_dept_sec_name, 
+            out DataSet p_dept_data,
+            out string p_dept_name
+            )
         {
             List<OracleParameter> parms = new List<OracleParameter>()
             {
                   new OracleParameter(){ ParameterName ="@p_dept_no", Value= p_dept_no },
-                  //new OracleParameter(){ ParameterName ="@p_dept_sec_name", Value= p_dept_sec_name},
+                  new OracleParameter(){ ParameterName ="@P_it_p", Value= p_dept_sec_name},
                   new OracleParameter(){ ParameterName ="@p_dept_data", OracleDbType = OracleDbType.RefCursor ,Direction =ParameterDirection.Output },
                   new OracleParameter(){ ParameterName ="@p_dept_name", OracleDbType = OracleDbType.Varchar2 ,Direction =ParameterDirection.InputOutput , Size = 50}
             };
 
-            DataTable dt;
+            ado.ExecuteStoredProcedure(
+                "PRC_GET_DEPTS",
+                parms,
+                out OracleParameterCollection OPC,
+                out p_dept_data
+                );
 
-            OracleParameterCollection orc = ado.ExecuteStoredProcedure("PRC_GET_DEPTS", parms, out dt);
-
-            //p_dept_name ="N/A sss";
-            p_dept_name = orc["@p_dept_name"].Value.ToString();
-
-            return dt;
+            p_dept_name = OPC["@p_dept_name"].Value.ToString();
         }
 
         public void Dispose()

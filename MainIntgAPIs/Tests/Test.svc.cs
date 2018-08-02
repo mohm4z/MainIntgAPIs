@@ -14,13 +14,17 @@ namespace MainIntgAPIs.Tests
     // NOTE: In order to launch WCF Test Client for testing this service, please select Test.svc or Test.svc.cs at the Solution Explorer and start debugging.
     public class Test : ITest
     {
-        public IEnumerable<dept> GetData(string T_NAME)
+        public IEnumerable<dept> GetData(
+            string T_NAME
+            )
         {
             try
             {
                 using (TestBLL tbl = new TestBLL())
                 {
-                    return tbl.GetDeptHelper(T_NAME);
+                    return tbl.GetDeptHelper(
+                        T_NAME
+                        );
                 }
             }
             catch (Exception ex)
@@ -29,13 +33,19 @@ namespace MainIntgAPIs.Tests
             }
         }
 
-        public R_View GetSP(int dept_no, string dept_sec_name)
+        public R_View GetSP(
+             int dept_no, 
+             string dept_sec_name
+            )
         {
             try
             {
                 using (TestBLL tbl = new TestBLL())
                 {
-                    return tbl.GetSP(dept_no,  dept_sec_name);
+                    return tbl.GetSP(
+                        dept_no, 
+                        dept_sec_name
+                        );
                 }
             }
             catch (Exception ex)
