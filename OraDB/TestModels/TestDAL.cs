@@ -8,6 +8,7 @@ using OraDB.DbManager;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using System.Dynamic;
+using Common.CommonClasses;
 
 namespace OraDB.TestModels
 {
@@ -68,19 +69,28 @@ namespace OraDB.TestModels
 
 
         public void GetSP2_DAL(
-            in int p_dept_no,
-            in string p_dept_sec_name,
+            in List<GENC> GENCs,
             out DataSet p_dept_data,
             out string p_dept_name
             )
         {
-            List<OracleParameter> parms = new List<OracleParameter>()
+            List<OracleParameter> parms = new List<OracleParameter>();
+
+            foreach (GENC item in GENCs)
             {
-                  new OracleParameter(){ ParameterName ="@p_dept_no", Value= p_dept_no },
-                  new OracleParameter(){ ParameterName ="@P_it_p", Value= p_dept_sec_name},
-                  new OracleParameter(){ ParameterName ="@p_dept_data", OracleDbType = OracleDbType.RefCursor ,Direction =ParameterDirection.Output },
-                  new OracleParameter(){ ParameterName ="@p_dept_name", OracleDbType = OracleDbType.Varchar2 ,Direction =ParameterDirection.InputOutput , Size = 50}
-            };
+                parms.Add(new OracleParameter() { ParameterName = "@" + item.KEY, Value = item.VALUE });
+            }
+
+            parms.AddRange(
+                )
+
+            //List<OracleParameter> parms = new List<OracleParameter>()
+            //{
+            //      new OracleParameter(){ ParameterName ="@p_dept_no", Value= p_dept_no },
+            //      new OracleParameter(){ ParameterName ="@P_it_p", Value= p_dept_sec_name},
+            //      new OracleParameter(){ ParameterName ="@p_dept_data", OracleDbType = OracleDbType.RefCursor ,Direction =ParameterDirection.Output },
+            //      new OracleParameter(){ ParameterName ="@p_dept_name", OracleDbType = OracleDbType.Varchar2 ,Direction =ParameterDirection.InputOutput , Size = 50}
+            //};
 
             ado.ExecuteStoredProcedure(
                 "PRC_GET_DEPTS",

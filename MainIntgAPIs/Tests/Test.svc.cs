@@ -53,6 +53,34 @@ namespace MainIntgAPIs.Tests
                 throw new Exception("Errorn Ma : " + ex.Message);
             }
         }
+
+
+        public R_View GetSP2(
+             int PI_1I,
+             int PI_2I,
+             string PI_3S,
+             string PI_4S,
+             string PI_5S
+           )
+        {
+            try
+            {
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.GetSP2(
+                            PI_1I,
+                            PI_2I,
+                            PI_3S,
+                            PI_4S,
+                            PI_5S
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Errorn Ma : " + ex.Message);
+            }
+        }
     }
 
 

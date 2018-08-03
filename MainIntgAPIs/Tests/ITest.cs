@@ -24,5 +24,11 @@ namespace MainIntgAPIs.Tests
              int dept_no,
              string dept_sec_name
             );
+
+        [OperationContract]
+        R_View GetSP2(
+             int dept_no,
+             string dept_sec_name
+            );
     }
 }
