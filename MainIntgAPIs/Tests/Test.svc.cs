@@ -8,6 +8,8 @@ using System.Text;
 using System.Data;
 using BLL.TestHelper;
 using System.Dynamic;
+using Common.CommonClasses;
+using System.Xml.Linq;
 
 namespace MainIntgAPIs.Tests
 {
@@ -35,8 +37,8 @@ namespace MainIntgAPIs.Tests
         }
 
         public R_View GetSP(
-             int dept_no, 
-             string dept_sec_name
+            int dept_no, 
+            string dept_sec_name
             )
         {
             try
@@ -55,14 +57,13 @@ namespace MainIntgAPIs.Tests
             }
         }
 
-
         public ExpandoObject MYPS55(
-             int PI_1I,
-             int PI_2I,
-             string PI_3S,
-             string PI_4S,
-             string PI_5S
-           )
+            int PI_1I,
+            int PI_2I,
+            string PI_3S,
+            string PI_4S,
+            string PI_5S
+            )
         {
             try
             {
@@ -70,7 +71,7 @@ namespace MainIntgAPIs.Tests
 
                 using (TestBLL tbl = new TestBLL())
                 {
-                    return tbl.MYPS55(
+                    return tbl.Test_MYPS55(
                             PI_1I,
                             PI_2I,
                             PI_3S,
@@ -85,8 +86,146 @@ namespace MainIntgAPIs.Tests
                 throw new Exception("Errorn Ma : " + ex.Message);
             }
         }
+
+
+        public ExpandoObject Test_MYPS55_2(
+            int PI_1I
+            )
+        {
+            try
+            {
+                // Data Validations
+
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.Test_MYPS55_2(
+                            PI_1I
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                // Exceptions Handler
+                throw new Exception("Errorn Ma : " + ex.Message);
+            }
+        }
+
+        public List<SrvOutPots> Test_MYPS55_3(
+            int PI_1I
+            )
+        {
+            try
+            {
+                /// Data Validations
+
+                //if (String.IsNullOrEmpty(PI_1I))
+
+                //throw new FaultException<ValidationFault>(new ValidationFault());
+
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.Test_MYPS55_3(
+                            PI_1I
+                        );
+                }
+            }
+            catch (FaultException<ValidationFault> e)
+            {
+                ValidationFault fault = new ValidationFault
+                {
+                    Result = true,
+                    Message = "Parameter not correct",
+                    Description = "Invalid Parameter Name or All Parameters are nullu"
+                };
+
+                throw new FaultException<ValidationFault>(
+                    fault);
+            }
+            catch (Exception ex)
+            {
+                ValidationFault fault = new ValidationFault
+                {
+                    Result = false,
+                    Message = ex.Message,
+                    Description = "Service have an internal error please contact service administartor m.zanaty@mlsd.gov.sa"
+                };
+
+                throw new FaultException<ValidationFault>(fault);
+            }
+        }
+
+        public XElement Test_MYPS55_4(
+            int PI_1I
+            )
+        {
+            try
+            {
+                // Data Validations
+                if (true)
+                {
+
+                }
+
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.Test_MYPS55_4(
+                            PI_1I
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                // Exceptions Handler
+                throw new Exception("Errorn Ma : " + ex.Message);
+            }
+        }
+
+
+
+        public XElement CH_P_ESTBLSH_REG_INFO(
+           int P_REG_ID
+           )
+        {
+            try
+            {
+                /// Data Validations
+
+                //if (String.IsNullOrEmpty(PI_1I))
+
+                //throw new FaultException<ValidationFault>(new ValidationFault());
+
+                using (TestBLL tbl = new TestBLL())
+                {
+                    return tbl.CH_P_ESTBLSH_REG_INFO(
+                            P_REG_ID
+                        );
+                }
+            }
+            catch (FaultException<ValidationFault> e)
+            {
+                ValidationFault fault = new ValidationFault
+                {
+                    Result = true,
+                    Message = "Parameter not correct",
+                    Description = "Invalid Parameter Name or All Parameters are nullu"
+                };
+
+                throw new FaultException<ValidationFault>(
+                    fault);
+            }
+            catch (Exception ex)
+            {
+                ValidationFault fault = new ValidationFault
+                {
+                    Result = false,
+                    Message = ex.Message,
+                    Description = "Service have an internal error please contact service administartor m.zanaty@mlsd.gov.sa"
+                };
+
+                throw new FaultException<ValidationFault>(fault);
+            }
+        }
     }
 
-
-
+    
 }

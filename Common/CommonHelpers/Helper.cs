@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Xml.Linq;
+
 namespace Common.CommonHelpers
 {
     public static class Helper
@@ -16,7 +18,9 @@ namespace Common.CommonHelpers
         /// <typeparam name="T">Generic object</typeparam>
         /// <param name="table">DataTable</param>
         /// <returns>List with generic objects</returns>
-        public static IEnumerable<T> DataTableToList<T>(this DataTable table) where T : class, new()
+        public static IEnumerable<T> DataTableToList<T>(
+            this DataTable table
+            ) where T : class, new()
         {
             try
             {
@@ -49,5 +53,8 @@ namespace Common.CommonHelpers
                 return null;
             }
         }
+
+
+
     }
 }

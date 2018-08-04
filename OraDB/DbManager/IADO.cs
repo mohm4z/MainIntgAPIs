@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Xml.Linq;
+using Common.CommonClasses;
 using Oracle.ManagedDataAccess.Client;
 
 namespace OraDB.DbManager
@@ -16,7 +18,9 @@ namespace OraDB.DbManager
         /// </summary>
         /// <param name="Statment"></param>
         /// <returns></returns>
-        bool SqlCommand(string Statment);
+        bool SqlCommand(
+            string Statment
+            );
 
         /// <summary>
         /// 
@@ -49,34 +53,82 @@ namespace OraDB.DbManager
         /// </summary>
         /// <param name="Commite"></param>
         /// <returns></returns>
-        bool SqlCommiteT(bool Commite);
+        bool SqlCommiteT(
+            bool Commite
+            );
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="Statment"></param>
         /// <returns></returns>
-        DataTable SqlSelect(string Statment);
+        DataTable SqlSelect(
+            string Statment
+            );
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="Statment"></param>
         /// <returns></returns>
-        DataRow SqlSelectOneRow(string Statment);
+        DataRow SqlSelectOneRow(
+            string Statment
+            );
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="Statment"></param>
         /// <returns></returns>
-        object SqlSelectOneValue(string Statment);
+        object SqlSelectOneValue(
+            string Statment
+            );
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        object Nullable(object value);
+        object Nullable(
+            object value
+            );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outOfOPs"></param>
+        /// <returns></returns>
+        void PapulateOPs(
+              ref List<OracleParameter> OpParams,
+             in List<SqOutPuts> outOfOPs
+             );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="OpParams"></param>
+        /// <param name="GENCs"></param>
+        List<OracleParameter> PapulateOpsListFromGENCs(
+            in List<SpInPuts> GENCs
+            );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="OPCs"></param>
+        /// <returns></returns>
+        ExpandoObject CreateExapoClass(
+            ref OracleParameterCollection OPCs
+            );
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="OPCs"></param>
+        /// <returns></returns>
+        XElement CreateXElement(
+            in string T_NAME,
+            ref OracleParameterCollection OPCs
+           );
     }
 }

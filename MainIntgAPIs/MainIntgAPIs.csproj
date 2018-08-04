@@ -76,7 +76,6 @@
     <Compile Include="Tests\Test.svc.cs">
       <DependentUpon>Test.svc</DependentUpon>
     </Compile>
-    <Compile Include="ValidationFault.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

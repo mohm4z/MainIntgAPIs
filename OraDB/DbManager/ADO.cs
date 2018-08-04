@@ -10,6 +10,9 @@ using System.Data;
 //using System.Data.OracleClient;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
+using Common.CommonClasses;
+using System.Dynamic;
+using System.Xml.Linq;
 
 namespace OraDB.DbManager
 {
@@ -44,12 +47,18 @@ namespace OraDB.DbManager
             conn = new OracleConnection(
             //"SERVER=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));uid=ulp;pwd=ulp;unicode=true;"
             "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=ORCL)));User Id=main;Password=main;"
+            //"Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=ServerDB)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=ORCL)));User Id=main;Password=main;"
                 );
 
-            cmd = new OracleCommand();
-            cmd.Connection = conn;
+            cmd = new OracleCommand
+            {
+                Connection = conn
+            };
 
-            if (conn.State != ConnectionState.Open) conn.Open();
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
         }
 
         public ADO(bool Trans)
@@ -59,7 +68,10 @@ namespace OraDB.DbManager
             cmd.Connection = conn;
             //cmd.BindByName = true;
 
-            if (conn.State != ConnectionState.Open) conn.Open();
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+            }
 
             SqlTrans = conn.BeginTransaction();
             cmd.Transaction = SqlTrans;
@@ -483,6 +495,91 @@ namespace OraDB.DbManager
         ////    }
         ////}
 
+        #region General Methods
+
+        public List<OracleParameter> PapulateOpsListFromGENCs(
+            in List<SpInPuts> spInPuts
+            )
+        {
+            List<OracleParameter> OpParms = new List<OracleParameter>();
+
+            foreach (SpInPuts spin in spInPuts)
+            {
+                OpParms.Add(new OracleParameter()
+                {
+                    ParameterName = ":" + spin.KEY,
+                    Value = spin.VALUE
+                });
+            }
+
+            return OpParms;
+        }
+
+        public void PapulateOPs(
+             ref List<OracleParameter> OpParams,
+             in List<SqOutPuts> sqOutPuts
+            )
+        {
+            for (int i = 0; i < sqOutPuts.Count(); i++)
+            {
+                OpParams.Add(new OracleParameter()
+                {
+                    ParameterName = ":" + sqOutPuts[i].ParameterName,
+                    OracleDbType = sqOutPuts[i].OracleDbType,
+                    Direction = ParameterDirection.Output,
+                    Size = sqOutPuts[i].Size
+                });
+            }
+        }
+
+        public ExpandoObject CreateExapoClass(
+            ref OracleParameterCollection OPCs
+            )
+        {
+            dynamic exapoy = new ExpandoObject();
+
+            foreach (OracleParameter opc in OPCs)
+            {
+                if (opc.Direction == ParameterDirection.Output)
+                {
+                    var expandoDict = exapoy as IDictionary<string, object>;
+
+                    if (expandoDict.ContainsKey(opc.ParameterName.Remove(0, 1)))
+                        expandoDict[opc.ParameterName.Remove(0, 1)] = opc.Value.ToString();
+                    else
+                        expandoDict.Add(opc.ParameterName.Remove(0, 1), opc.Value.ToString());
+                }
+            }
+
+            return exapoy;
+        }
+
+
+        public XElement CreateXElement(
+            in string T_NAME,
+            ref OracleParameterCollection OPCs
+           )
+        {
+            XNamespace aw = "mlsd";
+            XElement xmlTree = new XElement(aw +T_NAME);
+
+            //xmlTree.Document.Root.Descendants();
+
+            foreach (OracleParameter opc in OPCs)
+            {
+                if (opc.Direction == ParameterDirection.Output)
+                {
+                    xmlTree.Add(
+                        new XElement(aw + opc.ParameterName.Remove(0, 1), opc.Value)
+                        );
+                }
+            }
+
+            return xmlTree;
+        }
+
+        #endregion
+
         public void Dispose()
         {
             try
@@ -495,4 +592,5 @@ namespace OraDB.DbManager
             { }
         }
     }
+
 }
