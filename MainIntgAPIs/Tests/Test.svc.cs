@@ -7,6 +7,7 @@ using System.Text;
 
 using System.Data;
 using BLL.TestHelper;
+using System.Dynamic;
 
 namespace MainIntgAPIs.Tests
 {
@@ -55,7 +56,7 @@ namespace MainIntgAPIs.Tests
         }
 
 
-        public R_View GetSP2(
+        public ExpandoObject MYPS55(
              int PI_1I,
              int PI_2I,
              string PI_3S,
@@ -65,9 +66,11 @@ namespace MainIntgAPIs.Tests
         {
             try
             {
+                // Data Validations
+
                 using (TestBLL tbl = new TestBLL())
                 {
-                    return tbl.GetSP2(
+                    return tbl.MYPS55(
                             PI_1I,
                             PI_2I,
                             PI_3S,
@@ -78,6 +81,7 @@ namespace MainIntgAPIs.Tests
             }
             catch (Exception ex)
             {
+                // Exceptions Handler
                 throw new Exception("Errorn Ma : " + ex.Message);
             }
         }

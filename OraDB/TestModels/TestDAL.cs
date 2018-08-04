@@ -29,8 +29,8 @@ namespace OraDB.TestModels
         }
 
         public void GetSP_DAL(
-            in int p_dept_no, 
-            in string p_dept_sec_name, 
+            in int p_dept_no,
+            in string p_dept_sec_name,
             out DataSet p_dept_data,
             out string p_dept_name
             )
@@ -68,52 +68,50 @@ namespace OraDB.TestModels
         }
 
 
-        public void GetSP2_DAL(
+        public void MYPS55_DAL(
             in List<GENC> GENCs,
-            out DataSet p_dept_data,
-            out string p_dept_name
+            out ExpandoObject exapo
             )
         {
-            List<OracleParameter> parms = new List<OracleParameter>();
+            // من الممكن قراءة المخرجات الخاصه بالإجراء من قواعد البيانات وإنشائها بشكل تلقائي
+
+            List<OracleParameter> parms = new List<OracleParameter>()
+            {
+                new OracleParameter() { ParameterName = "@PO_1I", OracleDbType = OracleDbType.Int32, Direction = ParameterDirection.Output, Size = 50 },
+                new OracleParameter() { ParameterName = "@PO_2I", OracleDbType = OracleDbType.Int32, Direction = ParameterDirection.Output, Size = 50 },
+                new OracleParameter() { ParameterName = "@PO_3S", OracleDbType = OracleDbType.Varchar2, Direction = ParameterDirection.Output, Size = 50 },
+                new OracleParameter() { ParameterName = "@PO_4S", OracleDbType = OracleDbType.Varchar2, Direction = ParameterDirection.Output, Size = 50 },
+                new OracleParameter() { ParameterName = "@PO_5S", OracleDbType = OracleDbType.Varchar2, Direction = ParameterDirection.Output, Size = 50 },
+            };
 
             foreach (GENC item in GENCs)
             {
                 parms.Add(new OracleParameter() { ParameterName = "@" + item.KEY, Value = item.VALUE });
             }
 
-            parms.AddRange(
-                )
-
-            //List<OracleParameter> parms = new List<OracleParameter>()
-            //{
-            //      new OracleParameter(){ ParameterName ="@p_dept_no", Value= p_dept_no },
-            //      new OracleParameter(){ ParameterName ="@P_it_p", Value= p_dept_sec_name},
-            //      new OracleParameter(){ ParameterName ="@p_dept_data", OracleDbType = OracleDbType.RefCursor ,Direction =ParameterDirection.Output },
-            //      new OracleParameter(){ ParameterName ="@p_dept_name", OracleDbType = OracleDbType.Varchar2 ,Direction =ParameterDirection.InputOutput , Size = 50}
-            //};
-
             ado.ExecuteStoredProcedure(
-                "PRC_GET_DEPTS",
+                "MYPS55",
                 parms,
-                out OracleParameterCollection OPC,
-                out p_dept_data
+                out OracleParameterCollection OPCs
                 );
 
+            dynamic exapoy = new ExpandoObject();
 
-            dynamic expando = new ExpandoObject();
-
-            foreach (OracleParameter item in OPC)
+            foreach (OracleParameter opc in OPCs)
             {
-                // ExpandoObject supports IDictionary so we can extend it like this
-                var expandoDict = expando as IDictionary<string, object>;
-                if (expandoDict.ContainsKey("ss"))
-                    expandoDict["ss"] = "44";
-                else
-                    expandoDict.Add("ss", "44");
+                if (opc.Direction == ParameterDirection.Output)
+                {
+                    var expandoDict = exapoy as IDictionary<string, object>;
+
+                    if (expandoDict.ContainsKey(opc.ParameterName))
+                        expandoDict[opc.ParameterName] = opc.Value;
+                    else
+                        expandoDict.Add(opc.ParameterName, opc.Value);
+                }
             }
 
-
-            p_dept_name = OPC["@p_dept_name"].Value.ToString();
+            exapo = exapoy;
+            //p_dept_name = OPC["@p_dept_name"].Value.ToString();
         }
 
         public void Dispose()

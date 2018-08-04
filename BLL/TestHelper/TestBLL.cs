@@ -10,6 +10,7 @@ using OraDB.TestModels;
 using System.Collections;
 using Common.CommonHelpers;
 using Common.CommonClasses;
+using System.Dynamic;
 
 namespace BLL.TestHelper
 {
@@ -55,7 +56,7 @@ namespace BLL.TestHelper
         }
 
 
-        public R_View GetSP2(
+        public ExpandoObject MYPS55(
             in int PI_1I,
             in int PI_2I,
             in string PI_3S,
@@ -74,12 +75,11 @@ namespace BLL.TestHelper
                     new GENC(){KEY = "PI_5S" ,VALUE = PI_5S},
                 };
 
-                //test.GetSP2_DAL(
-                //    dept_no,
-                //    dept_sec_name,
-                //    out DataSet DS,
-                //    out string p_dept_name
-                //    );
+
+                test.MYPS55_DAL(
+                   ioj,
+                   out ExpandoObject exp
+                    );
 
                 //R_View ev = new R_View
                 //{
@@ -87,7 +87,7 @@ namespace BLL.TestHelper
                 //    P_DEPT_NAME = p_dept_name
                 //};
 
-                return new R_View();
+                return exp;
             }
         }
 

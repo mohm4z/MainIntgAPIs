@@ -7,6 +7,7 @@ using System.Text;
 
 using System.Data;
 using BLL.TestHelper;
+using System.Dynamic;
 
 namespace MainIntgAPIs.Tests
 {
@@ -26,9 +27,12 @@ namespace MainIntgAPIs.Tests
             );
 
         [OperationContract]
-        R_View GetSP2(
-             int dept_no,
-             string dept_sec_name
-            );
+        ExpandoObject MYPS55(
+             int PI_1I,
+             int PI_2I,
+             string PI_3S,
+             string PI_4S,
+             string PI_5S
+           );
     }
 }
